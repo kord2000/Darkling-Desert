@@ -1,5 +1,5 @@
 /*
-TODO: Adding keys and chests for items.
+TODO: Having items appear outside of chest.
 */
 
 /*======================== GLOBAL VARIABLES ========================*/
