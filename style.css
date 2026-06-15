@@ -1,7 +1,22 @@
-html, body {
+html {
   margin: 0;
   padding: 0;
 }
 canvas {
-  display: block;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-direction: column;
+  background-color: gray;
+}
+#guiScreen {
+  border: 25px;
+  border-color:white;
 }
