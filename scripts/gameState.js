@@ -6,6 +6,6 @@ export const gameState = {
     maxRoundTime: 0,
     roundTime: 0,
 
-    currentState: 'rewardRound'
+    currentState: 'rewardRound',
 
 };

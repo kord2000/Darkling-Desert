@@ -2,15 +2,15 @@
 TODO: Having items appear outside of chest.
 */
 import { gameState } from "../gameState.js";
+import { Player } from "../spritesAndGroups/Player.js"
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
-  let player;
   let bullets;
   let enemies;
   let keys;
   let chests;
-  let fireRate = 60;
+  let player;
 
   let chestSetup = false;
 
@@ -21,17 +21,12 @@ export const gameSketch = (q) => {
 
   q.setup = () => {
     const game = q.createCanvas(1200, 900);
-    // game.canvas.style = "";
 
     // Create player.
-    makePlayer();
+    player = new Player(q);
 
-    // Create bullets group for player.
-    bullets = new q.Group();
-    bullets.d = 5;
-    bullets.color = "black";
-    bullets.stroke = "silver";
-    bullets.speed = 6;
+    // Create bullets. 
+    bullets = player.bullets;
 
     // Create enemies group.
     enemies = new q.Group();
@@ -85,7 +80,7 @@ export const gameSketch = (q) => {
     boundaryBHR.w = q.height / 3;
     boundaryBHR.rotation = 90;
 
-    player.overlaps(bullets);
+    player.sprite.overlaps(bullets);
     bullets.overlaps(boundary);
     bullets.overlaps(keys);
     bullets.collides(chests, (b, c) => b.delete());
@@ -93,6 +88,8 @@ export const gameSketch = (q) => {
   };
   q.draw = () => {
     q.background(255);
+    player.movement(q);
+    player.shoot(q);
 
     switch (gameState.currentState) {
       case "fightRound":
@@ -111,15 +108,6 @@ export const gameSketch = (q) => {
 
   /* ===================================== Setup Functions ===================================== */
 
-  // Makes the player character.
-  let makePlayer = () => {
-    player = new q.Sprite(q.width / 2, (2 * q.height) / 3, 16);
-    player.color = "blue";
-    player.stroke = "black";
-    player.rotationLock = true;
-    player.weapon = "startPistol";
-    player.fireRate = fireRate;
-  };
 
   // Creates three chests the player can open using keys.
   let rewardSetup = () => {
@@ -161,9 +149,6 @@ export const gameSketch = (q) => {
 
   /* ===================================== Game State Functions =========================================== */
   let playRound = () => {
-    // player mechanics.
-    playerMovement();
-    playerShoot();
 
     // Enemy AI.
     enemyMovement();
@@ -179,11 +164,8 @@ export const gameSketch = (q) => {
   let rewardRound = () => {
     if (!chestSetup) rewardSetup();
 
-    // player mechanics.
-    playerMovement();
-    playerShoot();
 
-    player.collides(chests, openChest);
+    player.sprite.collides(chests, openChest);
 
     // chest UI
     q.fill(0);
@@ -195,44 +177,7 @@ export const gameSketch = (q) => {
   };
 
   /* ===================================== Game Mechanic Functions =========================================== */
-  // Allow player to move around on the screen.
-  let playerMovement = () => {
-    player.speed = 0;
-
-    // Up
-    if (q.kb.pressing("w")) player.y = player.y - 3;
-    // Left
-    if (q.kb.pressing("a")) player.x = player.x - 3;
-    // Down
-    if (q.kb.pressing("s")) player.y = player.y + 3;
-    // Right
-    if (q.kb.pressing("d")) player.x = player.x + 3;
-  };
-
-  // Allows player to shoot, uses a helper function to help determine
-  // direction of the bullets.
-  let playerShoot = () => {
-    if (q.frameCount % fireRate == 0) {
-      // NorthEast
-      if (q.keyIsDown(39) && q.keyIsDown(38)) shootBullet(315);
-      // SouthEast
-      else if (q.keyIsDown(39) && q.keyIsDown(40)) shootBullet(45);
-      // North West
-      else if (q.keyIsDown(37) && q.keyIsDown(38)) shootBullet(225);
-      // South West
-      else if (q.keyIsDown(37) && q.keyIsDown(40)) shootBullet(135);
-      else {
-        // East
-        if (q.keyIsDown(39)) shootBullet(0);
-        // West
-        else if (q.keyIsDown(37)) shootBullet(180);
-        // North
-        if (q.keyIsDown(38)) shootBullet(270);
-        // South
-        else if (q.keyIsDown(40)) shootBullet(90);
-      }
-    }
-  };
+  
 
   // Spawns Enemies at each of the spawn points designated by the cardinal directions.
   let spawnEnemies = (amount, location) => {
@@ -265,16 +210,9 @@ export const gameSketch = (q) => {
   // Controls enemy behavior for the game.
   let enemyMovement = () => {
     for (let e of enemies) {
-      e.direction = e.angleTo(player);
+      e.direction = e.angleTo(player.sprite);
       e.speed = 2;
     }
-  };
-
-  // Helper function to create individual bullets
-  // and determine their direction.
-  let shootBullet = (directionBullet) => {
-    let b = new bullets.Sprite(player.x, player.y);
-    b.direction = directionBullet;
   };
 
   let openChest = (p, c) => {
@@ -286,13 +224,13 @@ export const gameSketch = (q) => {
   };
   let checkCollisions = () => {
     bullets.collides(enemies, hitEnemy);
-    enemies.collides(player, loseLife);
-    player.overlaps(keys, collectKey);
+    enemies.collides(player.sprite, loseLife);
+    player.sprite.overlaps(keys, collectKey);
   };
 
   let checkBoundaries = () => {
-    player.x = q.constrain(player.x, 10, q.width - 5);
-    player.y = q.constrain(player.y, 10, q.height - 5);
+    player.sprite.x = q.constrain(player.sprite.x, 10, q.width - 5);
+    player.sprite.y = q.constrain(player.sprite.y, 10, q.height - 5);
     for (let k in keys) {
       q.constrain(k.x, 10, q.width);
       q.constrain(k.y, 10, q.height);
@@ -303,7 +241,7 @@ export const gameSketch = (q) => {
 
   // Controls key presses based on gamestate.
   let keyPressed = () => {
-    playerShoot();
+    player.shoot();
   };
 
   // Deletes enemy and bullets.
