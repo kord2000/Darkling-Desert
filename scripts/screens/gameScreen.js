@@ -1,6 +1,3 @@
-/*
-TODO: Having items appear outside of chest.
-*/
 import { gameState } from "../gameState.js";
 import { Player } from "../spritesAndGroups/Player.js";
 
