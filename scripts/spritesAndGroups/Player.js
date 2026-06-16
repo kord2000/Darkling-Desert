@@ -4,11 +4,17 @@ Player class contains the player sprite and methods for player behavior in the g
 
 export class Player {
     /*
-    Player constructor. 
+    Player constructor. What the user controls in the game.
     sprite - instantiates a q5play sprite. 
     sprite.color - sets the color of the sprite. 
     sprite.stroke - sets the border color of the sprite.
     sprite.rotationLock - sets the sprite to not rotate when colliding with other sprites. 
+    fireRate - controls the rate at which bullets are fired.
+    bullets - instantiates a q5play group to create projectiles for the player. 
+    bullets.d - sets the diameter of the bullets. 
+    bullets.color - sets the color of each sprite in the group. 
+    bullets.stroke - sets the border color for each sprite in the group. 
+    bullets.speed - sets the speed for each bullet. 
     */
   constructor(q) {
     this.sprite = new q.Sprite(q.width / 2, (2 * q.height) / 3, 16);
@@ -18,7 +24,6 @@ export class Player {
 
     this.fireRate = 60;
 
-    // Create bullets group for player.
     this.bullets = new q.Group();
     this.bullets.d = 5;
     this.bullets.color = "black";
@@ -27,7 +32,9 @@ export class Player {
   }
 
 
-    // Allow player to move around on the screen using WASD.
+    /*
+    Movement method - Allows the player to move around the arena using WASD.
+    */
     movement(q) {
     this.sprite.speed = 0;
     // Up
@@ -40,7 +47,9 @@ export class Player {
     if (q.kb.pressing("d")) this.sprite.x = this.sprite.x + 3;
   }
 
-  // Allows the player to shoot using arrow keys. shootBullet function is used to help with firing bullets in certain directions. 
+  /*
+  Shoot method - Allows the player to shoot using arrow keys. shootBullet function is used to help with firing bullets in certain directions. 
+  */
   shoot(q) {
     if (q.frameCount % this.fireRate == 0) {
       // NorthEast

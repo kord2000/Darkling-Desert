@@ -2,7 +2,7 @@
 TODO: Having items appear outside of chest.
 */
 import { gameState } from "../gameState.js";
-import { Player } from "../spritesAndGroups/Player.js"
+import { Player } from "../spritesAndGroups/Player.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
@@ -25,7 +25,7 @@ export const gameSketch = (q) => {
     // Create player.
     player = new Player(q);
 
-    // Create bullets. 
+    // Create bullets.
     bullets = player.bullets;
 
     // Create enemies group.
@@ -108,7 +108,6 @@ export const gameSketch = (q) => {
 
   /* ===================================== Setup Functions ===================================== */
 
-
   // Creates three chests the player can open using keys.
   let rewardSetup = () => {
     // Helps generate a random item for the chest
@@ -149,7 +148,6 @@ export const gameSketch = (q) => {
 
   /* ===================================== Game State Functions =========================================== */
   let playRound = () => {
-
     // Enemy AI.
     enemyMovement();
     if (q.frameCount % 120 == 0) {
@@ -164,7 +162,6 @@ export const gameSketch = (q) => {
   let rewardRound = () => {
     if (!chestSetup) rewardSetup();
 
-
     player.sprite.collides(chests, openChest);
 
     // chest UI
@@ -177,7 +174,6 @@ export const gameSketch = (q) => {
   };
 
   /* ===================================== Game Mechanic Functions =========================================== */
-  
 
   // Spawns Enemies at each of the spawn points designated by the cardinal directions.
   let spawnEnemies = (amount, location) => {
