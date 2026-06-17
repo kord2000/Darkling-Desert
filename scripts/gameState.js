@@ -6,6 +6,6 @@ export const gameState = {
     maxRoundTime: 60,
     roundTime: 60,
 
-    currentState: 'fightRound',
+    currentState: 'rewardRound',
 
 };

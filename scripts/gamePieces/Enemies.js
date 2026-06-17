@@ -2,56 +2,84 @@
 Enemies class - Used to create enemies.
 */
 
-
 export class Enemies {
+  /*
+  Enemies Manager Constructor. 
+  enemyGroup for controlling enemies. 
+
+  keysGroup are used to drop random keys for player to collect to open chests.
+  */
   constructor(q) {
-    this.group = new q.Group();
-    this.group.w = 16;
-    this.group.h = 16;
-    this.group.color = "red";
-    this.group.stroke = "white";
-    this.group.speed = 2;
-  } 
+    this.enemyGroup = new q.Group();
+    this.enemyGroup.w = 16;
+    this.enemyGroup.h = 16;
+    this.enemyGroup.color = "red";
+    this.enemyGroup.stroke = "white";
+    this.enemyGroup.speed = 2;
+
+    this.keysGroup = new q.Group();
+    this.keysGroup.d = 8;
+    this.keysGroup.color = "gray";
+    this.keysGroup.stroke = "black";
+    this.keysGroup.physics = "dynamic";
+  }
 
   // Spawns Enemies at each of the spawn points designated by the cardinal directions.
   spawnEnemies = (q) => {
     if (q.frameCount % 120 == 0) {
-    let enemyAmount = q.random([1, 2, 3]);
-    let location = q.random(["NORTH", "SOUTH", "EAST", "WEST"]);
-        for (let i = 0; i < enemyAmount; i++) {
-            let x, y;
-            if (location == "NORTH") {
-              x = Math.round(
-                q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
-              );
-              y = Math.round(q.random(-5, 5));
-            } else if (location == "SOUTH") {
-              x = Math.round(
-                q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
-              );
-              y = Math.round(q.random(q.height - 5, q.height + 5));
-            } else if (location == "EAST") {
-              x = Math.round(q.random(795, 805));
-              y = Math.round(
-                q.random(q.height / 2 - q.height / 6, q.height / 2 + q.height / 12),
-              );
-            } else {
-              x = Math.round(q.random(-5, 5));
-              y = Math.round(
-                q.random(q.height / 2 - q.height / 6, q.height / 2 + q.height / 12),
-              );
-            }
-            let e = new this.group.Sprite(x, y);
-            console.log("Enemy spawned: ", e.x, e.y);
+      let enemyAmount = q.random([1, 2, 3]);
+      let location = q.random(["NORTH", "SOUTH", "EAST", "WEST"]);
+
+      for (let i = 0; i < enemyAmount; i++) {
+        let x, y;
+
+        switch (location) {
+          case "NORTH":
+            x = Math.round(
+              q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+            );
+            y = Math.round(q.random(-5, 5));
+            break;
+
+          case "SOUTH":
+            x = Math.round(
+              q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+            );
+            y = Math.round(q.random(q.height - 5, q.height + 5));
+            break;
+
+          case "EAST":
+            x = Math.round(q.random(q.width - 5, q.width + 5));
+            y = Math.round(
+              q.random(
+                q.height / 2 - q.height / 6,
+                q.height / 2 + q.height / 12,
+              ),
+            );
+            break;
+
+          case "WEST":
+            x = Math.round(q.random(-5, 5));
+            y = Math.round(
+              q.random(
+                q.height / 2 - q.height / 6,
+                q.height / 2 + q.height / 12,
+              ),
+            );
+            break;
+
         }
+
+        let e = new this.enemyGroup.Sprite(x, y);
+        console.log("Enemy spawned:", e.x, e.y);
+      }
     }
-    };
+  };
 
-    // Controls enemy behavior for the game.
-      movement = (target) => {
-        for (let e of this.group) {
-            e.direction = e.angleTo(target);
-        }
-      };
-
+  // Controls enemy behavior for the game.
+  movement = (target) => {
+    for (let e of this.enemyGroup) {
+      e.direction = e.angleTo(target);
+    }
+  };
 }
