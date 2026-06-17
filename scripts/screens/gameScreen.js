@@ -1,18 +1,18 @@
 import { gameState } from "../gameState.js";
-import { Player } from "../spritesAndGroups/Player.js";
+import { Player } from "../gamePieces/Player.js";
+import { Boundary } from "../gamePieces/Boundary.js";
+import { Enemies } from "../gamePieces/Enemies.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
   let bullets;
+  let enemiesManager;
   let enemies;
   let keys;
   let chests;
   let player;
 
   let chestSetup = false;
-
-  let spawns = ["NORTH", "SOUTH", "WEST", "EAST"];
-  let enemyAmount = [1, 2, 3];
 
   let boundary;
 
@@ -22,16 +22,12 @@ export const gameSketch = (q) => {
     // Create player.
     player = new Player(q);
 
-    // Create bullets.
+    // Assign bullets to player bullets.
     bullets = player.bullets;
 
-    // Create enemies group.
-    enemies = new q.Group();
-    enemies.w = 16;
-    enemies.h = 16;
-    enemies.color = "red";
-    enemies.stroke = "white";
-    enemies.speed = 2;
+    // Create enemies manager.
+    enemiesManager = new Enemies(q);
+    enemies = enemiesManager.group;
 
     // Create keys group.
     keys = new q.Group();
@@ -46,42 +42,15 @@ export const gameSketch = (q) => {
     chests.color = "#954535";
 
     // Create Boundaries
-    boundary = new q.Group();
-    boundary.color = "purple";
-    boundary.stroke = "purple";
-    boundary.physics = "static";
-    boundary.h = 10;
+    boundary = new Boundary(q);
 
-    // Top
-    let boundaryTWR = new boundary.Sprite(q.width / 6, 5);
-    let boundaryTWL = new boundary.Sprite((5 * q.width) / 6, 5);
-    boundaryTWR.w = q.width / 3;
-    boundaryTWL.w = q.width / 3;
-    // Bottom
-    let boundaryBWR = new boundary.Sprite(q.width / 6, q.height - 5);
-    let boundaryBWL = new boundary.Sprite((5 * q.width) / 6, q.height - 5);
-    boundaryBWR.w = q.width / 3;
-    boundaryBWL.w = q.width / 3;
-    // Left
-    let boundaryTHL = new boundary.Sprite(5, q.height / 6);
-    let boundaryBHL = new boundary.Sprite(5, (5 * q.height) / 6);
-    boundaryTHL.w = q.height / 3;
-    boundaryTHL.rotation = 90;
-    boundaryBHL.w = q.height / 3;
-    boundaryBHL.rotation = 90;
-    // Right
-    let boundaryTHR = new boundary.Sprite(q.width - 5, q.height / 6);
-    let boundaryBHR = new boundary.Sprite(q.width - 5, (5 * q.height) / 6);
-    boundaryTHR.w = q.height / 3;
-    boundaryTHR.rotation = 90;
-    boundaryBHR.w = q.height / 3;
-    boundaryBHR.rotation = 90;
+    boundary.setup(q);
 
     player.sprite.overlaps(bullets);
-    bullets.overlaps(boundary);
+    bullets.overlaps(boundary.group);
     bullets.overlaps(keys);
     bullets.collides(chests, (b, c) => b.delete());
-    boundary.overlaps(boundary);
+    boundary.group.overlaps(boundary.group);
   };
   q.draw = () => {
     q.background(255);
@@ -101,6 +70,7 @@ export const gameSketch = (q) => {
     // q.fill(0);
     // q.stroke(0);
     // q.text(Math.round(player.y), 15, 20);
+    player.sprite.debug = true;
   };
 
   /* ===================================== Setup Functions ===================================== */
@@ -146,10 +116,9 @@ export const gameSketch = (q) => {
   /* ===================================== Game State Functions =========================================== */
   let playRound = () => {
     // Enemy AI.
-    enemyMovement();
-    if (q.frameCount % 120 == 0) {
-      spawnEnemies(Math.floor(q.random(enemyAmount)), q.random(spawns));
-    }
+    enemiesManager.movement(player.sprite);
+    enemiesManager.spawnEnemies(q);
+    
 
     // Physics
     checkCollisions();
@@ -172,52 +141,16 @@ export const gameSketch = (q) => {
 
   /* ===================================== Game Mechanic Functions =========================================== */
 
-  // Spawns Enemies at each of the spawn points designated by the cardinal directions.
-  let spawnEnemies = (amount, location) => {
-    for (let i = 0; i < amount; i++) {
-      let e = new enemies.Sprite();
-      if (location == "NORTH") {
-        e.x = Math.round(
-          q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
-        );
-        e.y = Math.round(q.random(-5, 5));
-      } else if (location == "SOUTH") {
-        e.x = Math.round(
-          q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
-        );
-        e.y = Math.round(q.random(595, 605));
-      } else if (location == "EAST") {
-        e.x = Math.round(q.random(795, 805));
-        e.y = Math.round(
-          q.random(q.height / 2 - q.height / 6, q.height / 2 + q.height / 12),
-        );
-      } else {
-        e.x = Math.round(q.random(-5, 5));
-        e.y = Math.round(
-          q.random(q.height / 2 - q.height / 6, q.height / 2 + q.height / 12),
-        );
-      }
-    }
-  };
-
-  // Controls enemy behavior for the game.
-  let enemyMovement = () => {
-    for (let e of enemies) {
-      e.direction = e.angleTo(player.sprite);
-      e.speed = 2;
-    }
-  };
-
   let openChest = (p, c) => {
-    if (gamestate.keyCount >= c.cost) {
-      gamestate.keyCount -= c.cost;
+    if (gameState.keyCount >= c.cost) {
+      gameState.keyCount -= c.cost;
       c.cost = "";
       c.color = "black";
     }
   };
   let checkCollisions = () => {
     bullets.collides(enemies, hitEnemy);
-    enemies.collides(player.sprite, loseLife);
+    enemiesManager.group.collides(player.sprite, loseLife);
     player.sprite.overlaps(keys, collectKey);
   };
 
@@ -232,7 +165,6 @@ export const gameSketch = (q) => {
 
   /* ============================= Callback Functions ================================================= */
 
-  // Controls key presses based on gamestate.
   let keyPressed = () => {
     player.shoot();
   };
@@ -249,15 +181,18 @@ export const gameSketch = (q) => {
 
   // Player loses a life and the level resets.
   let loseLife = (e, p) => {
-    gamestate.lives--;
+    console.log("COLLISION")
+    console.log("Player Position: ", p.x, p.y);
+    console.log("Enemy position: ", e.x, e.y);
+    gameState.lives--;
     p.delete();
-    enemies.deleteAll();
+    enemiesManager.group.deleteAll();
     keys.deleteAll();
-    makePlayer();
+    player = new Player(q);
   };
 
   let collectKey = (p, k) => {
-    gamestate.keyCount++;
+    gameState.keyCount++;
     k.delete();
   };
 };

@@ -3,9 +3,9 @@ export const gameState = {
     keyCount: 6,
     rounds: 1, 
 
-    maxRoundTime: 0,
-    roundTime: 0,
+    maxRoundTime: 60,
+    roundTime: 60,
 
-    currentState: 'rewardRound',
+    currentState: 'fightRound',
 
 };
