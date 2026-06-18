@@ -19,8 +19,10 @@ export class Boundary {
     this.group.physics = "static";
     this.group.h = 10;
   }
-
-  setup(q) {
+  /*
+  setup - creates the barriers for the game screen. Creates openings for enemies to spawn from. 
+  */
+  setup = (q) => {
     // Top
     let boundaryTWR = new this.group.Sprite(q.width / 6, 5);
     let boundaryTWL = new this.group.Sprite((5 * q.width) / 6, 5);

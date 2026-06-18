@@ -4,7 +4,7 @@ export const guiSketch = (q) => {
   let timePassed = 0;
   let t = 0;
   q.setup = () => {
-    q.createCanvas(800, 30);
+    q.createCanvas(1000, 30);
   };
 
   q.draw = () => {
@@ -20,8 +20,8 @@ export const guiSketch = (q) => {
     q.textSize(12);
     q.text("lives: " + gameState.lives, 25, 15);
     q.text("Keys: " + gameState.keyCount, 100, 15);
-    q.text("Round: " + gameState.rounds, 400, 15);
-    q.text("Round Time: " + gameState.roundTime, 500, 15);
+    q.text("Round: " + gameState.rounds, 500, 15);
+    q.text("Round Time: " + gameState.roundTime, 650, 15);
   };
 
   let timer = () => {

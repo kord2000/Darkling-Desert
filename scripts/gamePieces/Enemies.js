@@ -1,6 +1,8 @@
 /*
-Enemies class - Used to create enemies.
+Enemies class - Used to create/manage enemy sprites in fightRounds.
 */
+
+import { gameState } from "../gameState.js";
 
 export class Enemies {
   /*
@@ -24,9 +26,14 @@ export class Enemies {
     this.keysGroup.physics = "dynamic";
   }
 
+  update = (q, target) => {
+    this.spawnEnemies(q);
+    this.movement(target);
+  }
+
   // Spawns Enemies at each of the spawn points designated by the cardinal directions.
   spawnEnemies = (q) => {
-    if (q.frameCount % 120 == 0) {
+    if (q.frameCount % 120 == 0 && gameState.roundTime > 0) {
       let enemyAmount = q.random([1, 2, 3]);
       let location = q.random(["NORTH", "SOUTH", "EAST", "WEST"]);
 
@@ -67,11 +74,9 @@ export class Enemies {
               ),
             );
             break;
-
         }
 
         let e = new this.enemyGroup.Sprite(x, y);
-        console.log("Enemy spawned:", e.x, e.y);
       }
     }
   };

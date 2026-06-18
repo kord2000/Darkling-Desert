@@ -3,7 +3,7 @@ Player class contains the player sprite and methods for player behavior in the g
 */
 
 export class Player {
-    /*
+  /*
     Player constructor. What the user controls in the game.
     sprite - instantiates a q5play sprite. 
     sprite.color - sets the color of the sprite. 
@@ -17,10 +17,7 @@ export class Player {
     bullets.speed - sets the speed for each bullet. 
     */
   constructor(q) {
-    this.sprite = new q.Sprite(q.width / 2, (2 * q.height) / 3, 16);
-    this.sprite.color = "blue";
-    this.sprite.stroke = "black";
-    this.sprite.rotationLock = true;
+    this.sprite = null;
 
     this.fireRate = 60;
 
@@ -30,12 +27,31 @@ export class Player {
     this.bullets.stroke = "silver";
     this.bullets.speed = 6;
   }
+  /* -------------------------- Methods --------------------------------------------- */
+  /*
+  setup - creates the player sprite. 
+  */
+  setup = (q) => {
+    this.sprite = new q.Sprite(q.width / 2, (2 * q.height) / 3, 16);
+    this.sprite.color = "blue";
+    this.sprite.stroke = "black";
+    this.sprite.rotationLock = true;
 
+    this.sprite.overlaps(this.bullets);
+  }
 
-    /*
-    Movement method - Allows the player to move around the arena using WASD.
+  /*
+  draw - controls the sprites behavior. Allows movement with WASD and shooting with arrow keys. 
+  */
+  draw = (q) => {
+    this.movement(q);
+    this.shoot(q);
+  }
+
+  /*
+    movement - Allows the player to move around the arena using WASD.
     */
-    movement(q) {
+  movement = (q) => {
     this.sprite.speed = 0;
     // Up
     if (q.kb.pressing("w")) this.sprite.y = this.sprite.y - 3;
@@ -48,9 +64,9 @@ export class Player {
   }
 
   /*
-  Shoot method - Allows the player to shoot using arrow keys. shootBullet function is used to help with firing bullets in certain directions. 
+  shoot - Allows the player to shoot using arrow keys. shootBullet function is used to help with firing bullets in certain directions. 
   */
-  shoot(q) {
+  shoot = (q) => {
     if (q.frameCount % this.fireRate == 0) {
       // NorthEast
       if (q.keyIsDown(39) && q.keyIsDown(38)) this.shootBullet(315);
