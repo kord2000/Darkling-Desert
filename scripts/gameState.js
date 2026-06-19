@@ -1,5 +1,5 @@
 export const gameState = {
-  lives: 1,
+  lives: 3,
   keyCount: 0,
   rounds: 1,
 

@@ -2,15 +2,19 @@
 Chests class - Vendor to purchase items!
 */
 
-export class Chest {
+export class Chests {
   constructor(q) {
     this.group = new q.Group();
     this.group.w = 16;
     this.group.h = 16;
     this.group.color = "#954535";
 
+    
+
     this.initialized = false;
   }
+
+  
 
   // Creates three chests the player can open using keys.
   rewardSetup = (q) => {
@@ -19,17 +23,25 @@ export class Chest {
         q.width / 3 + (i * q.width) / 6,
         q.height / 2,
       );
-      c.cost = Math.round(q.random(1, 3));
+      c.cost = generateCost();
       c.reward = this.itemGenerate(q, c.cost);
       console.log(`Chest # ${i + 1}: ${c.reward}`);
     }
     this.initialized = true;
   };
 
+
+  // generateCost - Helps generate a random cost for teh chest between 1 and 3.
+  generateCost = () => {
+      const minCeiled = 1;
+      const maxFloored = 3;
+      return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+    };
+
   // Helps generate a random item for the chest
   // based on the cost of the item.
   itemGenerate = (q, cost) => {
-    let randomItem = q.random();
+    let randomItem = Math.random();
     switch (cost) {
       case 1:
         if (randomItem < 0.5) {
@@ -55,7 +67,7 @@ export class Chest {
   };
 
   ui(q) {
-    // chest UI - dsiplays values. 
+    // chest UI - dsiplays values.
     q.fill(0);
     q.stroke(0);
     q.textAlign(q.CENTER, q.CENTER);

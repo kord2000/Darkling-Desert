@@ -54,13 +54,13 @@ export class Player {
   movement = (q) => {
     this.sprite.speed = 0;
     // Up
-    if (q.kb.pressing("w")) this.sprite.y = this.sprite.y - 3;
+    if (q.keyIsDown("w")) this.sprite.y = this.sprite.y - 3;
     // Left
-    if (q.kb.pressing("a")) this.sprite.x = this.sprite.x - 3;
+    if (q.keyIsDown("a")) this.sprite.x = this.sprite.x - 3;
     // Down
-    if (q.kb.pressing("s")) this.sprite.y = this.sprite.y + 3;
+    if (q.keyIsDown("s")) this.sprite.y = this.sprite.y + 3;
     // Right
-    if (q.kb.pressing("d")) this.sprite.x = this.sprite.x + 3;
+    if (q.keyIsDown("d")) this.sprite.x = this.sprite.x + 3;
   }
 
   /*

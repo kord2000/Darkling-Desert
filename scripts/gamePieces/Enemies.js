@@ -43,22 +43,22 @@ export class Enemies {
         switch (location) {
           case "NORTH":
             x = Math.round(
-              q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+              this.randomLocation(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
             );
-            y = Math.round(q.random(-5, 5));
+            y = Math.round(this.randomLocation(-5, 5));
             break;
 
           case "SOUTH":
             x = Math.round(
-              q.random(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+              this.randomLocation(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
             );
-            y = Math.round(q.random(q.height - 5, q.height + 5));
+            y = Math.round(this.randomLocation(q.height - 5, q.height + 5));
             break;
 
           case "EAST":
-            x = Math.round(q.random(q.width - 5, q.width + 5));
+            x = Math.round(this.randomLocation(q.width - 5, q.width + 5));
             y = Math.round(
-              q.random(
+              this.randomLocation(
                 q.height / 2 - q.height / 6,
                 q.height / 2 + q.height / 12,
               ),
@@ -66,9 +66,9 @@ export class Enemies {
             break;
 
           case "WEST":
-            x = Math.round(q.random(-5, 5));
+            x = Math.round(this.randomLocation(-5, 5));
             y = Math.round(
-              q.random(
+              this.randomLocation(
                 q.height / 2 - q.height / 6,
                 q.height / 2 + q.height / 12,
               ),
@@ -87,4 +87,8 @@ export class Enemies {
       e.direction = e.angleTo(target);
     }
   };
+
+  randomLocation = (min, max) => {
+    return Math.random() * (max - min) + min;
+  }
 }

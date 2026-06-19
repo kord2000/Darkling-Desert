@@ -2,7 +2,7 @@ import { gameState, resetGameState } from "../gameState.js";
 import { Player } from "../gamePieces/Player.js";
 import { Boundary } from "../gamePieces/Boundary.js";
 import { Enemies } from "../gamePieces/Enemies.js";
-import { Chest } from "../gamePieces/Chest.js";
+import { Chests } from "../gamePieces/Chest.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
@@ -30,7 +30,7 @@ export const gameSketch = (q) => {
     keys = enemiesManager.keysGroup;
 
     // Create chests.
-    chests = new Chest(q);
+    chests = new Chests(q);
 
     // Create Boundaries
     boundary = new Boundary(q);
@@ -47,8 +47,15 @@ export const gameSketch = (q) => {
     switch (gameState.currentState) {
       case "fightRound":
         q.background(255);
-        player.draw(q);
+
+        // Checks updates to gameState.
         playRound();
+
+        // Checks for player updates every frame.
+        player.draw(q);
+
+        // Enemy AI - Updates every frame.
+        enemiesManager.update(q, player.sprite);
         break;
       case "rewardRound":
         q.background(255);
@@ -92,9 +99,6 @@ export const gameSketch = (q) => {
       gameState.currentState = "gameOver";
       q.allSprites.deleteAll();
     }
-
-    // Enemy AI.
-    enemiesManager.update(q, player.sprite);
 
     // Physics
     checkCollisions();
