@@ -7,11 +7,19 @@ import { gameState } from "../gameState.js";
 export class Enemies {
   /*
   Enemies Manager Constructor. 
-  enemyGroup for controlling enemies. 
+  q - Stores the Q5 instance the player is being used in.
+  enemyGroup - q5play Group class used to keep track of enemies.
+  enemyGroup.w - width of each enemy sprite. 
+  enemyGroup.h - height of each enemy sprite.
+  enemyGroup.color - Color for each enemy. 
+  enemyGroup.stroke  - Border color for each enemy. 
+  enemyGroup.speed - Sets the speed for each enemy.  
 
-  keysGroup are used to drop random keys for player to collect to open chests.
+
+  keysGroup - used to drop random keys for player to collect to open chests.
   */
   constructor(q) {
+    this.q = q;
     this.enemyGroup = new q.Group();
     this.enemyGroup.w = 16;
     this.enemyGroup.h = 16;
@@ -26,16 +34,16 @@ export class Enemies {
     this.keysGroup.physics = "dynamic";
   }
 
-  update = (q, target) => {
-    this.spawnEnemies(q);
+  update = (target) => {
+    this.spawnEnemies();
     this.movement(target);
-  }
+  };
 
   // Spawns Enemies at each of the spawn points designated by the cardinal directions.
-  spawnEnemies = (q) => {
-    if (q.frameCount % 120 == 0 && gameState.roundTime > 0) {
-      let enemyAmount = q.random([1, 2, 3]);
-      let location = q.random(["NORTH", "SOUTH", "EAST", "WEST"]);
+  spawnEnemies = () => {
+    if (this.q.frameCount % 120 == 0 && gameState.roundTime > 0) {
+      let enemyAmount = this.q.random([1, 2, 3]);
+      let location = this.q.random(["NORTH", "SOUTH", "EAST", "WEST"]);
 
       for (let i = 0; i < enemyAmount; i++) {
         let x, y;
@@ -43,24 +51,34 @@ export class Enemies {
         switch (location) {
           case "NORTH":
             x = Math.round(
-              this.randomLocation(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+              this.randomLocation(
+                this.q.width / 2 - this.q.width / 6,
+                this.q.width / 2 + this.q.width / 12,
+              ),
             );
             y = Math.round(this.randomLocation(-5, 5));
             break;
 
           case "SOUTH":
             x = Math.round(
-              this.randomLocation(q.width / 2 - q.width / 6, q.width / 2 + q.width / 12),
+              this.randomLocation(
+                this.q.width / 2 - this.q.width / 6,
+                this.q.width / 2 + this.q.width / 12,
+              ),
             );
-            y = Math.round(this.randomLocation(q.height - 5, q.height + 5));
+            y = Math.round(
+              this.randomLocation(this.q.height - 5, this.q.height + 5),
+            );
             break;
 
           case "EAST":
-            x = Math.round(this.randomLocation(q.width - 5, q.width + 5));
+            x = Math.round(
+              this.randomLocation(this.q.width - 5, this.q.width + 5),
+            );
             y = Math.round(
               this.randomLocation(
-                q.height / 2 - q.height / 6,
-                q.height / 2 + q.height / 12,
+                this.q.height / 2 - this.q.height / 6,
+                this.q.height / 2 + this.q.height / 12,
               ),
             );
             break;
@@ -69,8 +87,8 @@ export class Enemies {
             x = Math.round(this.randomLocation(-5, 5));
             y = Math.round(
               this.randomLocation(
-                q.height / 2 - q.height / 6,
-                q.height / 2 + q.height / 12,
+                this.q.height / 2 - this.q.height / 6,
+                this.q.height / 2 + this.q.height / 12,
               ),
             );
             break;
@@ -90,5 +108,5 @@ export class Enemies {
 
   randomLocation = (min, max) => {
     return Math.random() * (max - min) + min;
-  }
+  };
 }
