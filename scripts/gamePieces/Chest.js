@@ -4,39 +4,35 @@ Chests class - Vendor to purchase items!
 
 export class Chests {
   constructor(q) {
+    this.q = q;
     this.group = new q.Group();
     this.group.w = 16;
     this.group.h = 16;
     this.group.color = "#954535";
 
-    
-
     this.initialized = false;
   }
 
-  
-
-  // Creates three chests the player can open using keys.
-  rewardSetup = (q) => {
+  // rewardSetup - Creates three chests the player can open using keys.
+  rewardSetup = () => {
     for (let i = 0; i < 3; i++) {
       let c = new this.group.Sprite(
-        q.width / 3 + (i * q.width) / 6,
-        q.height / 2,
+        this.q.width / 3 + (i * this.q.width) / 6,
+        this.q.height / 2,
       );
       c.cost = generateCost();
-      c.reward = this.itemGenerate(q, c.cost);
+      c.reward = this.itemGenerate(this.q, c.cost);
       console.log(`Chest # ${i + 1}: ${c.reward}`);
     }
     this.initialized = true;
   };
 
-
-  // generateCost - Helps generate a random cost for teh chest between 1 and 3.
+  // generateCost - Helps generate a random cost for the chest between 1 and 3.
   generateCost = () => {
-      const minCeiled = 1;
-      const maxFloored = 3;
-      return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
-    };
+    const minCeiled = 1;
+    const maxFloored = 3;
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+  };
 
   // Helps generate a random item for the chest
   // based on the cost of the item.
@@ -65,14 +61,14 @@ export class Chests {
         }
     }
   };
-
-  ui(q) {
-    // chest UI - dsiplays values.
-    q.fill(0);
-    q.stroke(0);
-    q.textAlign(q.CENTER, q.CENTER);
+  
+  // chest UI - dsiplays values.
+  ui() {
+    this.q.fill(0);
+    this.q.stroke(0);
+    this.q.textAlign(this.q.CENTER, this.q.CENTER);
     for (let chest of this.group) {
-      q.text(chest.cost, chest.x, chest.y - chest.h / 2 - 10);
+      this.q.text(chest.cost, chest.x, chest.y - chest.h / 2 - 10);
     }
   }
 }
