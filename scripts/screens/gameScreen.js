@@ -7,39 +7,15 @@ import { FightRound } from "../states/FightRound.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
-
   let fightRound;
 
   q.setup = () => {
-  q.createCanvas(1200, 900);
+    q.createCanvas(1200, 900);
 
-  fightRound = new FightRound(q);
+    fightRound = new FightRound(q);
 
-  fightRound.setup();
-  }
-  // // Create player.
-  // player = new Player(q);
-  // player.setup(q);
-
-  // // Assign bullets to player bullets.
-  // bullets = player.bullets;
-
-  // // Create enemies manager.
-  // enemiesManager = new Enemies(q);
-  // enemies = enemiesManager.enemyGroup;
-  // keys = enemiesManager.keysGroup;
-
-  // // Create chests.
-  // chests = new Chests(q);
-
-  // // Create Boundaries
-  // boundary = new Boundary(q);
-  // boundary.setup(q);
-
-  // bullets.overlaps(boundary.group);
-  // bullets.overlaps(keys);
-  // bullets.collides(chests.group, (b, c) => b.delete());
-  // boundary.group.overlaps(boundary.group);
+    fightRound.setup();
+  };
 
   q.draw = () => {
     console.log(`Current Game State: ${gameState.currentState}`);
@@ -47,16 +23,7 @@ export const gameSketch = (q) => {
     switch (gameState.currentState) {
       case "fightRound":
         fightRound.draw();
-        // q.background(255);
 
-        // // Checks updates to gameState.
-        // playRound();
-
-        // // Checks for player updates every frame.
-        // player.draw(q);
-
-        // // Enemy AI - Updates every frame.
-        // enemiesManager.update(q, player.sprite);
         break;
       case "rewardRound":
         q.background(255);
@@ -68,11 +35,6 @@ export const gameSketch = (q) => {
         gameOver();
         break;
     }
-
-    // // Debug Zone
-    // q.fill(0);
-    // q.stroke(0);
-    // q.text(Math.round(player.y), 15, 20);
   };
 
   /* ===================================== Game State Functions =========================================== */
@@ -89,19 +51,6 @@ export const gameSketch = (q) => {
       resetGameState();
       fightRound.setup();
     }
-  };
-
-  let playRound = () => {
-    // if (gameState.roundTime <= 0 && enemies.length == 0) {
-    //   gameState.roundTime = 0;
-    //   gameState.currentState = "rewardRound";
-    // } else if (gameState.lives == 0) {
-    //   gameState.currentState = "gameOver";
-    //   q.allSprites.deleteAll();
-    // }
-    // Physics
-    // checkCollisions();
-    // checkBoundaries();
   };
 
   let rewardRound = () => {
