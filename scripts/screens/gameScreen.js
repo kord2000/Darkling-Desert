@@ -1,8 +1,4 @@
 import { gameState, resetGameState } from "../gameState.js";
-import { Player } from "../gamePieces/Player.js";
-import { Boundary } from "../gamePieces/Boundary.js";
-import { Enemies } from "../gamePieces/Enemies.js";
-import { Chests } from "../gamePieces/Chest.js";
 import { FightRound } from "../states/FightRound.js";
 
 /*======================== Gameplay Screen ========================*/

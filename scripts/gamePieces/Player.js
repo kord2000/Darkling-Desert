@@ -68,7 +68,6 @@ export class Player {
     if (this.q.keyIsDown("s")) this.sprite.y = this.sprite.y + 3;
     // Right
     if (this.q.keyIsDown("d")) this.sprite.x = this.sprite.x + 3;
-    this.checkBoundary();
   };
 
   /*
@@ -107,11 +106,6 @@ export class Player {
   resetSprite = () => {
     this.sprite.x = this.q.width / 2;
     this.sprite.y = this.q.height / 2;
-  };
-
-  checkBoundary = () => {
-    this.sprite.x = this.q.constrain(this.sprite.x, 10, this.q.width - 5);
-    this.sprite.y = this.q.constrain(this.sprite.y, 10, this.q.height - 5);
   };
 
   // Helper function to create individual bullets
