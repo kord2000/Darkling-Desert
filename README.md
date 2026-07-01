@@ -7,6 +7,6 @@ Originally created using the [p5.js web editor](https://editor.p5js.org/DrewBalb
 - OOP practices.
 - Closures in Javascript.
 
-DONE: Recreate two boundaries. One for when the player is in a fight round and one for the reward round.  
+DONE: Recreate two boundaries. One for when the player is in a fight round and one for the reward round. Migrated rewardRound screen to it's own file. 
 
-TODO (6/26/26): Migrate rewardRound screen to it's own file. Create basic finite state machine for player actions. 
+TODO (7/01/26): Keep track of player position so they do not move when switching between rewardRound and fightRound states.  
