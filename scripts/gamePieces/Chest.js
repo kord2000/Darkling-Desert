@@ -20,8 +20,8 @@ export class Chests {
         this.q.width / 3 + (i * this.q.width) / 6,
         this.q.height / 2,
       );
-      c.cost = generateCost();
-      c.reward = this.itemGenerate(this.q, c.cost);
+      c.cost = this.generateCost();
+      c.reward = this.itemGenerate(c.cost);
       console.log(`Chest # ${i + 1}: ${c.reward}`);
     }
     this.initialized = true;
@@ -36,7 +36,7 @@ export class Chests {
 
   // Helps generate a random item for the chest
   // based on the cost of the item.
-  itemGenerate = (q, cost) => {
+  itemGenerate = (cost) => {
     let randomItem = Math.random();
     switch (cost) {
       case 1:

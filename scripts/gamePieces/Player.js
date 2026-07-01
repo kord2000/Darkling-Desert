@@ -59,7 +59,6 @@ export class Player {
     movement - Allows the player to move around the arena using WASD.
     */
   movement = () => {
-    this.sprite.speed = 0;
     // Up
     if (this.q.keyIsDown("w")) this.sprite.y = this.sprite.y - 3;
     // Left

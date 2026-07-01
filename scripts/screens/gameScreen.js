@@ -1,5 +1,6 @@
 import { gameState, resetGameState } from "../gameState.js";
 import { FightRound } from "../states/FightRound.js";
+import { RewardRound } from "../states/RewardRound.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
@@ -9,7 +10,7 @@ export const gameSketch = (q) => {
     q.createCanvas(1200, 900);
 
     fightRound = new FightRound(q);
-
+    rewardRound = new RewardRound(q);
     fightRound.setup();
   };
 
@@ -20,11 +21,24 @@ export const gameSketch = (q) => {
       case "fightRound":
         fightRound.draw();
 
+        if (
+          gameState.roundTime <= 0 &&
+          fightRound.enemiesManager.enemyGroup.length == 0
+        ) {
+          gameState.roundTime = 0;
+          q.allSprites.deleteAll();
+          gameState.currentState = "rewardRound";
+          rewardRound.setup()
+        } else if (gameState.lives == 0) {
+          gameState.currentState = "gameOver";
+          this.q.allSprites.deleteAll();
+        }
+
         break;
       case "rewardRound":
         q.background(255);
-        player.draw();
-        rewardRound();
+        rewardRound.draw();
+        
         break;
       case "gameOver":
         q.background(0);
@@ -57,13 +71,4 @@ export const gameSketch = (q) => {
     chests.ui();
   };
 
-  /* ===================================== Game Mechanic Functions =========================================== */
-
-  let openChest = (p, c) => {
-    if (gameState.keyCount >= c.cost) {
-      gameState.keyCount -= c.cost;
-      c.cost = "";
-      c.color = "black";
-    }
-  };
 };

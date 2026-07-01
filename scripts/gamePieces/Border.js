@@ -2,6 +2,8 @@
 Boundary Class: Contains the player, enemies, chests, etc. 
 */
 
+import { gameState } from "../gameState.js";
+
 export class Border {
   /*
   Boundary Constructor - Initializes the q5play group class for boundary sprites. 
@@ -24,24 +26,21 @@ export class Border {
     this.boundary.physics = "static";
 
     this.entrances = new this.borderGroup.Group();
-    this.entrances.color = 'red';
-    this.entrances.stroke = 'black';
-    this.entrances.physics = 'static';
+    this.entrances.color = "red";
+    this.entrances.stroke = "black";
+    this.entrances.physics = "static";
   }
   /*
   setup - creates the barriers for the game screen. Creates openings for enemies to spawn from. 
   */
   setup = () => {
-
-    let halfWidth = this.q.width/2;
+    let halfWidth = this.q.width / 2;
     let thirdWidth = this.q.width / 3;
     let sixthWidth = this.q.width / 6;
 
-    let halfHeight = this.q.height/2;
+    let halfHeight = this.q.height / 2;
     let thirdHeight = this.q.height / 3;
     let sixthHeight = this.q.height / 6;
-    
-
 
     // Top
     let boundaryTWR = this.createBoundary(sixthWidth, 5, thirdWidth, 0);
@@ -49,9 +48,24 @@ export class Border {
     let northEntrance = this.createEntrance(halfWidth, 5, thirdWidth, 0);
 
     // Bottom
-    let boundaryBWR = this.createBoundary(sixthWidth, this.q.height - 5, thirdWidth, 0);
-    let boundaryBWL = this.createBoundary(5 * sixthWidth, this.q.height - 5, thirdWidth, 0);
-    let southEntrance = this.createEntrance(halfWidth, this.q.height - 5, thirdWidth, 0);
+    let boundaryBWR = this.createBoundary(
+      sixthWidth,
+      this.q.height - 5,
+      thirdWidth,
+      0,
+    );
+    let boundaryBWL = this.createBoundary(
+      5 * sixthWidth,
+      this.q.height - 5,
+      thirdWidth,
+      0,
+    );
+    let southEntrance = this.createEntrance(
+      halfWidth,
+      this.q.height - 5,
+      thirdWidth,
+      0,
+    );
 
     // Left
     let boundaryTHL = this.createBoundary(5, sixthHeight, thirdHeight, 90);
@@ -59,11 +73,28 @@ export class Border {
     let westEntrance = this.createEntrance(5, halfHeight, thirdHeight, 90);
 
     // Right
-    let boundaryTHR = this.createBoundary(this.q.width - 5, sixthHeight, thirdHeight, 90);
-    let boundaryBHR = this.createBoundary(this.q.width - 5, 5 * sixthHeight, thirdHeight, 90);
-    let eastEntrance = this.createEntrance(this.q.width - 5, halfHeight, thirdHeight, 90);
-    
+    let boundaryTHR = this.createBoundary(
+      this.q.width - 5,
+      sixthHeight,
+      thirdHeight,
+      90,
+    );
+    let boundaryBHR = this.createBoundary(
+      this.q.width - 5,
+      5 * sixthHeight,
+      thirdHeight,
+      90,
+    );
+    let eastEntrance = this.createEntrance(
+      this.q.width - 5,
+      halfHeight,
+      thirdHeight,
+      90,
+    );
+
     this.boundary.overlaps(this.boundary);
+
+    
   };
 
   /*
@@ -92,5 +123,5 @@ export class Border {
     let entrance = new this.entrances.Sprite(x, y);
     entrance.w = width;
     entrance.rotation = rotation;
-  }
+  };
 }

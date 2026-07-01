@@ -2,6 +2,7 @@ import { Player } from "../gamePieces/Player.js";
 import { Enemies } from "../gamePieces/Enemies.js";
 import { Border } from "../gamePieces/Border.js";
 import { gameState } from "../gameState.js";
+import { RewardRound } from "./RewardRound.js";
 
 export class FightRound {
   constructor(q) {
@@ -26,17 +27,6 @@ export class FightRound {
 
   draw() {
     this.q.background(255);
-
-    if (
-      gameState.roundTime <= 0 &&
-      this.enemiesManager.enemyGroup.length == 0
-    ) {
-      gameState.roundTime = 0;
-      gameState.currentState = "rewardRound";
-    } else if (gameState.lives == 0) {
-      gameState.currentState = "gameOver";
-      this.q.allSprites.deleteAll();
-    }
 
     this.player.draw();
 
