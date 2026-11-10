@@ -9,12 +9,8 @@ export class Chests {
     this.group.h = 16;
     this.group.color = "#954535";
 
-    
-
     this.initialized = false;
   }
-
-  
 
   // Creates three chests the player can open using keys.
   rewardSetup = (q) => {
@@ -23,20 +19,19 @@ export class Chests {
         q.width / 3 + (i * q.width) / 6,
         q.height / 2,
       );
-      c.cost = generateCost();
+      c.cost = this.generateCost();
       c.reward = this.itemGenerate(q, c.cost);
       console.log(`Chest # ${i + 1}: ${c.reward}`);
     }
     this.initialized = true;
   };
 
-
-  // generateCost - Helps generate a random cost for teh chest between 1 and 3.
+  // generateCost - Helps generate a random cost for a chest between 1 and 3.
   generateCost = () => {
-      const minCeiled = 1;
-      const maxFloored = 3;
-      return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
-    };
+    const minCeiled = 1;
+    const maxFloored = 3;
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
+  };
 
   // Helps generate a random item for the chest
   // based on the cost of the item.
