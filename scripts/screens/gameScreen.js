@@ -61,7 +61,10 @@ export const gameSketch = (q) => {
   };
 
   let playRound = () => {
-    if (gameState.roundTime <= 0 && enemies.length == 0) {
+    if (gameState.lives == 0) {
+      q.allSprites.deleteAll();
+      gameState.currentState = "gameOver";
+    } else if (gameState.roundTime <= 0 && enemies.length == 0) {
       gameState.roundTime = 0;
       gameState.currentState = "rewardRound";
     } else if (gameState.lives == 0) {
