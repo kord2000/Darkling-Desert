@@ -4,7 +4,7 @@ export const gameState = {
   rounds: 1,
 
   maxRoundTime: 60,
-  roundTime: 60,
+  roundTime: 5,
 
   currentState: "fightRound",
 };

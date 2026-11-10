@@ -1,46 +1,19 @@
 import { gameState, resetGameState } from "../gameState.js";
-import { Player } from "../gamePieces/Player.js";
-import { Boundary } from "../gamePieces/Boundary.js";
-import { Enemies } from "../gamePieces/Enemies.js";
-import { Chests } from "../gamePieces/Chest.js";
+import { FightRound } from "../states/FightRound.js";
+import { RewardRound } from "../states/RewardRound.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
-  let boundaryManager, boundary;
-
-  let enemiesManager, enemies;
-
-  let chests, keys;
-
-  let player, bullets;
+  let fightRound;
 
   q.setup = () => {
-    const game = q.createCanvas(1200, 900);
+    q.createCanvas(1200, 900);
 
-    // Create player.
-    player = new Player(q);
-    player.setup(q);
-
-    // Assign bullets to player bullets.
-    bullets = player.bullets;
-
-    // Create enemies manager.
-    enemiesManager = new Enemies(q);
-    enemies = enemiesManager.enemyGroup;
-    keys = enemiesManager.keysGroup;
-
-    // Create chests.
-    chests = new Chests(q);
-
-    // Create Boundaries
-    boundary = new Boundary(q);
-    boundary.setup(q);
-
-    bullets.overlaps(boundary.group);
-    bullets.overlaps(keys);
-    bullets.collides(chests.group, (b, c) => b.delete());
-    boundary.group.overlaps(boundary.group);
+    fightRound = new FightRound(q);
+    rewardRound = new RewardRound(q);
+    fightRound.setup();
   };
+
   q.draw = () => {
     console.log(`Current Game State: ${gameState.currentState}`);
 
@@ -56,19 +29,14 @@ export const gameSketch = (q) => {
         break;
       case "rewardRound":
         q.background(255);
-        player.draw(q);
-        rewardRound();
+        rewardRound.draw();
+        
         break;
       case "gameOver":
         q.background(0);
         gameOver();
         break;
     }
-
-    // // Debug Zone
-    // q.fill(0);
-    // q.stroke(0);
-    // q.text(Math.round(player.y), 15, 20);
   };
 
   /* ===================================== Game State Functions =========================================== */
@@ -86,6 +54,7 @@ export const gameSketch = (q) => {
       console.log(player.sprite.toString());
       boundary.setup(q);
       resetGameState();
+      fightRound.setup();
     }
   };
 
@@ -107,60 +76,11 @@ export const gameSketch = (q) => {
   };
 
   let rewardRound = () => {
-    if (!chests.initialized) chests.rewardSetup(q);
+    if (!chests.initialized) chests.rewardSetup();
 
     player.sprite.collides(chests.group, openChest);
 
-    chests.ui(q);
+    chests.ui();
   };
 
-  /* ===================================== Game Mechanic Functions =========================================== */
-
-  let openChest = (p, c) => {
-    if (gameState.keyCount >= c.cost) {
-      gameState.keyCount -= c.cost;
-      c.cost = "";
-      c.color = "black";
-    }
-  };
-  let checkCollisions = () => {
-    bullets.collides(enemies, hitEnemy);
-    enemies.collides(player.sprite, loseLife);
-    player.sprite.overlaps(keys, collectKey);
-  };
-
-  let checkBoundaries = () => {
-    player.sprite.x = q.constrain(player.sprite.x, 10, q.width - 5);
-    player.sprite.y = q.constrain(player.sprite.y, 10, q.height - 5);
-    for (let k in keys) {
-      q.constrain(k.x, 10, q.width - 10);
-      q.constrain(k.y, 10, q.height - 10);
-    }
-  };
-
-  /* ============================= Callback Functions ================================================= */
-
-  // Deletes enemy and bullets.
-  let hitEnemy = (b, e) => {
-    // Chance to spawn a key.
-    if (q.random() < 0.25) {
-      let k = new keys.Sprite(e.x, e.y);
-    }
-    b.delete();
-    e.delete();
-  };
-
-  // Player loses a life and the level resets.
-  let loseLife = (e, p) => {
-    gameState.lives--;
-    enemies.deleteAll();
-    keys.deleteAll();
-    p.x = q.width / 2;
-    p.y = q.height / 2;
-  };
-
-  let collectKey = (p, k) => {
-    gameState.keyCount++;
-    k.delete();
-  };
 };
