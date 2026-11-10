@@ -13,21 +13,21 @@ export class Chests {
     this.initialized = false;
   }
 
-  // rewardSetup - Creates three chests the player can open using keys.
-  rewardSetup = () => {
+  // Creates three chests the player can open using keys.
+  rewardSetup = (q) => {
     for (let i = 0; i < 3; i++) {
       let c = new this.group.Sprite(
         this.q.width / 3 + (i * this.q.width) / 6,
         this.q.height / 2,
       );
       c.cost = this.generateCost();
-      c.reward = this.itemGenerate(c.cost);
+      c.reward = this.itemGenerate(q, c.cost);
       console.log(`Chest # ${i + 1}: ${c.reward}`);
     }
     this.initialized = true;
   };
 
-  // generateCost - Helps generate a random cost for the chest between 1 and 3.
+  // generateCost - Helps generate a random cost for a chest between 1 and 3.
   generateCost = () => {
     const minCeiled = 1;
     const maxFloored = 3;

@@ -1,7 +1,6 @@
 import { gameState } from "../gameState.js";
 
 export const guiSketch = (q) => {
-  let timePassed = 0;
   let t = 0;
   q.setup = () => {
     q.createCanvas(1000, 30);

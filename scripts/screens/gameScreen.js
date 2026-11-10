@@ -19,21 +19,13 @@ export const gameSketch = (q) => {
 
     switch (gameState.currentState) {
       case "fightRound":
-        fightRound.draw();
+        q.background(255);
 
-        if (
-          gameState.roundTime <= 0 &&
-          fightRound.enemiesManager.enemyGroup.length == 0
-        ) {
-          gameState.roundTime = 0;
-          q.allSprites.deleteAll();
-          gameState.currentState = "rewardRound";
-          rewardRound.setup()
-        } else if (gameState.lives == 0) {
-          gameState.currentState = "gameOver";
-          this.q.allSprites.deleteAll();
-        }
+        // Checks updates to gameState.
+        playRound();
 
+        // Enemy AI - Updates every frame.
+        enemiesManager.update(q, player.sprite);
         break;
       case "rewardRound":
         q.background(255);
@@ -58,8 +50,28 @@ export const gameSketch = (q) => {
 
     if (q.kb.presses("enter")) {
       q.clear();
+      player.setup(q);
+      console.log(player.sprite.toString());
+      boundary.setup(q);
       resetGameState();
       fightRound.setup();
+    }
+  };
+
+  let playRound = () => {
+    if (gameState.lives == 0) {
+      console.log(player.sprite.toString());
+      q.allSprites.deleteAll();
+      gameState.currentState = "gameOver";
+    } else if (gameState.roundTime <= 0 && enemies.length == 0) {
+      gameState.roundTime = 0;
+      gameState.currentState = "rewardRound";
+    } else {
+      // Checks for player updates every frame.
+      player.draw(q);
+
+      // Physics
+      checkCollisions();
     }
   };
 
