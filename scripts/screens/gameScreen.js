@@ -83,7 +83,6 @@ export const gameSketch = (q) => {
     if (q.kb.presses("enter")) {
       q.clear();
       player.setup(q);
-      console.log(player.sprite.toString());
       boundary.setup(q);
       resetGameState();
     }
@@ -91,7 +90,6 @@ export const gameSketch = (q) => {
 
   let playRound = () => {
     if (gameState.lives == 0) {
-      console.log(player.sprite.toString());
       q.allSprites.deleteAll();
       gameState.currentState = "gameOver";
     } else if (gameState.roundTime <= 0 && enemies.length == 0) {
