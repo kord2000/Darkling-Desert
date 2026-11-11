@@ -72,6 +72,8 @@ export const gameSketch = (q) => {
   };
 
   /* ===================================== Game State Functions =========================================== */
+
+  // Displays the game over screen and allows the player to restart the game, occurs when the player has 0 lives.
   let gameOver = () => {
     q.textFill(255);
     q.textSize(64);
@@ -89,6 +91,7 @@ export const gameSketch = (q) => {
     }
   };
 
+  // Controls the fight round of the game, where the player fights enemies and collects keys to open chests.
   let playRound = () => {
     if (gameState.lives == 0) {
       console.log(player.sprite.toString());
@@ -106,6 +109,7 @@ export const gameSketch = (q) => {
     }
   };
 
+  // Controls the reward round of the game, where the player can open chests using keys collected during the fight round.
   let rewardRound = () => {
     if (!chests.initialized) chests.rewardSetup(q);
 
