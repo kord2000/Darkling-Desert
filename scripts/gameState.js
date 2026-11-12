@@ -1,12 +1,12 @@
 export const gameState = {
   lives: 3,
-  keyCount: 0,
+  keyCount: 10,
   rounds: 1,
 
   maxRoundTime: 60,
   roundTime: 60,
 
-  currentState: "fightRound",
+  currentState: "rewardRound",
 };
 
 export const resetGameState = () => {

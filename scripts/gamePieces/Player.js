@@ -1,7 +1,7 @@
 /*
 Player class contains the player sprite and methods for player behavior in the game. 
 */
-
+import { gameState } from "../gameState.js";
 export class Player {
   /*
     Player constructor. What the user controls in the game.
@@ -38,7 +38,7 @@ export class Player {
     this.sprite.rotationLock = true;
 
     this.sprite.overlaps(this.bullets);
-  }
+  };
 
   /*
   draw - controls the sprites behavior. Allows movement with WASD and shooting with arrow keys. 
@@ -46,7 +46,7 @@ export class Player {
   draw = (q) => {
     this.movement(q);
     this.shoot(q);
-  }
+  };
 
   /*
     movement - Allows the player to move around the arena using WASD.
@@ -61,7 +61,12 @@ export class Player {
     if (q.keyIsDown("s")) this.sprite.y = this.sprite.y + 3;
     // Right
     if (q.keyIsDown("d")) this.sprite.x = this.sprite.x + 3;
-  }
+
+    if (gameState.currentState === "fightRound") {
+      this.sprite.x = q.constrain(this.sprite.x, 5, q.width - 5);
+      this.sprite.y = q.constrain(this.sprite.y, 5, q.height - 5);
+    }
+  };
 
   /*
   shoot - Allows the player to shoot using arrow keys. shootBullet function is used to help with firing bullets in certain directions. 
@@ -87,7 +92,7 @@ export class Player {
         else if (q.keyIsDown(40)) this.shootBullet(90);
       }
     }
-  }
+  };
 
   // Helper function to create individual bullets
   // and determine their direction.

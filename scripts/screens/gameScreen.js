@@ -6,7 +6,7 @@ import { Chests } from "../gamePieces/Chest.js";
 
 /*======================== Gameplay Screen ========================*/
 export const gameSketch = (q) => {
-  let boundaryManager, boundary;
+  let boundary;
 
   let enemiesManager, enemies;
 
@@ -38,7 +38,7 @@ export const gameSketch = (q) => {
 
     bullets.overlaps(boundary.group);
     bullets.overlaps(keys);
-    bullets.collides(chests.group, (b, c) => b.delete());
+    bullets.collides(chests.chestGroup, (b, c) => b.delete());
     boundary.group.overlaps(boundary.group);
   };
   q.draw = () => {
@@ -51,12 +51,10 @@ export const gameSketch = (q) => {
         // Checks updates to gameState.
         playRound();
 
-        // Enemy AI - Updates every frame.
-        enemiesManager.update(q, player.sprite);
         break;
       case "rewardRound":
         q.background(255);
-        player.draw(q);
+
         rewardRound();
         break;
       case "gameOver":
@@ -101,11 +99,14 @@ export const gameSketch = (q) => {
       gameState.roundTime = 0;
       gameState.currentState = "rewardRound";
     } else {
+      // Physics
+      checkFightCollisions(q);
+
       // Checks for player updates every frame.
       player.draw(q);
 
-      // Physics
-      checkCollisions();
+      // Enemy AI - Updates every frame.
+      enemiesManager.update(q, player.sprite);
     }
   };
 
@@ -113,41 +114,68 @@ export const gameSketch = (q) => {
   let rewardRound = () => {
     if (!chests.initialized) chests.rewardSetup(q);
 
-    player.sprite.collides(chests.group, openChest);
-
     chests.ui(q);
+
+    checkRewardCollisions(q);
+
+    player.draw(q);
+  };
+
+  /* ===================================== Game Collision Functions =========================================== */
+  let checkFightCollisions = (q) => {
+    bullets.collides(enemies, hitEnemy);
+    enemies.collides(player.sprite, loseLife);
+    player.sprite.overlaps(keys, collectKey);
+
+    if (keys.length > 0) {
+      for (let k of keys) {
+        k.x = q.constrain(k.x, 10, q.width - 10);
+        k.y = q.constrain(k.y, 10, q.height - 10);
+      }
+    }
+  };
+
+  let checkRewardCollisions = (q) => {
+    player.sprite.collides(chests.chestGroup, openChest);
+
+    if (chests.itemGroup.length > 0) {
+      for (let i of chests.itemGroup) {
+        i.x = q.constrain(i.x, 10, q.width - 10);
+        i.y = q.constrain(i.y, 10, q.height - 10);
+      }
+    }
   };
 
   /* ===================================== Game Mechanic Functions =========================================== */
 
+  // Allow the player to open a chest if they have enough keys.
+  // Deducts the cost of the chest from the player's key count and spawns the item inside the chest.
   let openChest = (p, c) => {
-    if (gameState.keyCount >= c.cost) {
+    if (gameState.keyCount >= c.cost && !c.open) {
       gameState.keyCount -= c.cost;
+
       c.cost = "";
       c.color = "black";
+      c.open = true;
+
+      let i = new chests.itemGroup.Sprite(c.x, c.y);
+      i.direction = Math.random() * 360;
+      i.item = c.reward;
+      console.log(`Chest Opened: ${c.reward}`);
+
+      if (q.dist(i, c) < 50) {
+        i.speed = 2;
+      } else {
+        i.speed = 0;
+      }
     }
-  };
-  let checkCollisions = () => {
-    bullets.collides(enemies, hitEnemy);
-    enemies.collides(player.sprite, loseLife);
-    player.sprite.overlaps(keys, collectKey);
+    console.log("Chest Opened: ", c.open);
   };
 
-  let checkBoundaries = () => {
-    player.sprite.x = q.constrain(player.sprite.x, 10, q.width - 5);
-    player.sprite.y = q.constrain(player.sprite.y, 10, q.height - 5);
-    for (let k in keys) {
-      q.constrain(k.x, 10, q.width - 10);
-      q.constrain(k.y, 10, q.height - 10);
-    }
-  };
-
-  /* ============================= Callback Functions ================================================= */
-
-  // Deletes enemy and bullets.
+  // Deletes enemy and bullet that collide. Chance to spawn a key when an enemy is hit.
   let hitEnemy = (b, e) => {
     // Chance to spawn a key.
-    if (q.random() < 0.25) {
+    if (q.random() < 0.33) {
       let k = new keys.Sprite(e.x, e.y);
     }
     b.delete();
@@ -159,6 +187,7 @@ export const gameSketch = (q) => {
     gameState.lives--;
     enemies.deleteAll();
     keys.deleteAll();
+    bullets.deleteAll();
     p.x = q.width / 2;
     p.y = q.height / 2;
   };

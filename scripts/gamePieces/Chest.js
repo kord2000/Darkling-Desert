@@ -4,10 +4,15 @@ Chests class - Vendor to purchase items!
 
 export class Chests {
   constructor(q) {
-    this.group = new q.Group();
-    this.group.w = 16;
-    this.group.h = 16;
-    this.group.color = "#954535";
+    this.chestGroup = new q.Group();
+    this.chestGroup.w = 16;
+    this.chestGroup.h = 16;
+    this.chestGroup.color = "#954535";
+
+    this.itemGroup = new q.Group();
+    this.itemGroup.d = 8;
+    this.itemGroup.color = "green";
+    this.itemGroup.stroke = "black";
 
     this.initialized = false;
   }
@@ -15,14 +20,17 @@ export class Chests {
   // Creates three chests the player can open using keys.
   rewardSetup = (q) => {
     for (let i = 0; i < 3; i++) {
-      let c = new this.group.Sprite(
+      let c = new this.chestGroup.Sprite(
         q.width / 3 + (i * q.width) / 6,
         q.height / 2,
       );
       c.cost = this.generateCost();
       c.reward = this.itemGenerate(q, c.cost);
-      console.log(`Chest # ${i + 1}: ${c.reward}`);
+      c.open = false;
+      console.log(`Chest # ${i + 1}: ${c.reward} Cost: ${c.cost}`);
     }
+    
+
     this.initialized = true;
   };
 
@@ -62,11 +70,13 @@ export class Chests {
   };
 
   ui(q) {
-    // chest UI - dsiplays values.
+    // chest UI - displays values.
+    console.log("Chest UI");
     q.fill(0);
     q.stroke(0);
     q.textAlign(q.CENTER, q.CENTER);
-    for (let chest of this.group) {
+    q.textSize(12);
+    for (let chest of this.chestGroup) {
       q.text(chest.cost, chest.x, chest.y - chest.h / 2 - 10);
     }
   }
